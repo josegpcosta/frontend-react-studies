@@ -14,14 +14,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: |
-          pwd
-          ls -la
-          head -5 package-lock.json
-          grep -n '"picomatch"' package-lock.json | head -5
-          node -v
-          npm -v
-      - run: npm ci
+          cache: npm
+      - run: npm install
       - run: npm run lint
       - run: npm run build
       - uses: actions/upload-artifact@v4
