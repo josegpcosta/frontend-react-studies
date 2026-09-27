@@ -5,27 +5,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import './Pages.css';
 
-function formatarData(iso) {
-  const [ano, mes, dia] = iso.split('-');
-  return `${dia}/${mes}/${ano}`;
-}
-
-function calcularIdade(iso) {
-  const [ano, mes, dia] = iso.split('-').map(Number);
-  const hoje = new Date();
-  let idade = hoje.getFullYear() - ano;
-  const mesAtual = hoje.getMonth() + 1;
-
-  if (mesAtual < mes || (mesAtual === mes && hoje.getDate() < dia)) {
-    idade--;
-  }
-
-  return idade;
-}
-
-function iniciais(nome, sobrenome) {
-  return `${nome?.[0] ?? ''}${sobrenome?.[0] ?? ''}`.toUpperCase();
-}
+import { formatarData, calcularIdade, iniciais } from '../utils/formatters';
 
 export default function Home() {
   const [usuario, setUsuario] = useState(null);
