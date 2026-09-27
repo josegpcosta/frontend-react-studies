@@ -9,7 +9,8 @@ jest.mock('firebase/auth', () => ({ signInWithEmailAndPassword: jest.fn() }));
 
 function renderLogin() {
   render(
-    <MemoryRouter initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}
+    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<p>Página Home</p>} />

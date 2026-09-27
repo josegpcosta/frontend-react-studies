@@ -32,3 +32,36 @@ jobs:
         with:
           name: build
           path: build
+
+  notify:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord alert
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          STATUS: ${{ needs.build.result }}
+          EVENT: ${{ github.event_name }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          ACTOR: ${{ github.actor }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$STATUS" = "success" ]; then
+            TITLE="✅ CI passed"
+            COLOR=3066993
+          else
+            TITLE="❌ CI $STATUS"
+            COLOR=15158332
+          fi
+
+          DESC=$(printf 'Event: %s\nBranch: %s\nAuthor: %s\nCommit: %s' "$EVENT" "$BRANCH" "$ACTOR" "${SHA:0:7}")
+
+          jq -n \
+            --arg title "$TITLE" \
+            --arg desc "$DESC" \
+            --arg url "$RUN_URL" \
+            --argjson color "$COLOR" \
+            '{embeds: [{title: $title, description: $desc, url: $url, color: $color}]}' \
+          | curl -fsS -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"

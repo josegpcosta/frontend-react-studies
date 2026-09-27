@@ -16,7 +16,8 @@ jest.mock('firebase/firestore', () => ({
 
 function renderHome() {
   render(
-    <MemoryRouter initialEntries={['/home']}>
+    <MemoryRouter initialEntries={['/home']}
+    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<p>Página Login</p>} />

@@ -17,7 +17,8 @@ jest.mock('firebase/firestore', () => ({
 
 function renderCadastro() {
   render(
-    <MemoryRouter initialEntries={['/cadastro']}>
+    <MemoryRouter initialEntries={['/cadastro']}
+    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/" element={<p>Página Login</p>} />
